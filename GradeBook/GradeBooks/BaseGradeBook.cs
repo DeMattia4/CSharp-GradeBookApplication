@@ -23,12 +23,16 @@ namespace GradeBook.GradeBooks
             Students = new List<Student>();
         }
 
+
+
         public void AddStudent(Student student)
         {
             if (string.IsNullOrEmpty(student.Name))
                 throw new ArgumentException("A Name is required to add a student to a gradebook.");
             Students.Add(student);
         }
+
+
 
         public void RemoveStudent(string name)
         {
@@ -43,6 +47,8 @@ namespace GradeBook.GradeBooks
             Students.Remove(student);
         }
 
+
+
         public void AddGrade(string name, double score)
         {
             if (string.IsNullOrEmpty(name))
@@ -55,6 +61,8 @@ namespace GradeBook.GradeBooks
             }
             student.AddGrade(score);
         }
+
+
 
         public void RemoveGrade(string name, double score)
         {
@@ -69,6 +77,8 @@ namespace GradeBook.GradeBooks
             student.RemoveGrade(score);
         }
 
+
+
         public void ListStudents()
         {
             foreach (var student in Students)
@@ -76,6 +86,8 @@ namespace GradeBook.GradeBooks
                 Console.WriteLine("{0} : {1} : {2}", student.Name, student.Type, student.Enrollment);
             }
         }
+
+
 
         public static BaseGradeBook Load(string name)
         {
@@ -95,6 +107,8 @@ namespace GradeBook.GradeBooks
             }
         }
 
+
+
         public void Save()
         {
             using (var file = new FileStream(Name + ".gdbk", FileMode.Create, FileAccess.Write))
@@ -107,21 +121,35 @@ namespace GradeBook.GradeBooks
             }
         }
 
+
+
         public virtual double GetGPA(char letterGrade, StudentType studentType)
         {
+            var gpa = 0;
             switch (letterGrade)
             {
                 case 'A':
-                    return 4;
+                    gpa = 4;
+                    break;
                 case 'B':
-                    return 3;
+                    gpa = 3;
+                    break;
                 case 'C':
-                    return 2;
+                    gpa = 2;
+                    break;
                 case 'D':
-                    return 1;
+                    gpa = 1;
+                    break;
             }
-            return 0;
+            if (IsWeighted && (studentType == StudentType.Honors || studentType == StudentType.DualEnrolled))
+            {
+                gpa++;
+            }
+
+            return gpa;
         }
+
+
 
         public virtual void CalculateStatistics()
         {
@@ -190,6 +218,8 @@ namespace GradeBook.GradeBooks
                 Console.WriteLine("Average for only duel enrolled students is " + (dualEnrolledPoints / Students.Where(e => e.Type == StudentType.DualEnrolled).Count()));
         }
 
+
+
         public virtual void CalculateStudentStatistics(string name)
         {
             var student = Students.FirstOrDefault(e => e.Name == name);
@@ -204,6 +234,8 @@ namespace GradeBook.GradeBooks
                 Console.WriteLine(grade);
             }
         }
+
+
 
         public virtual char GetLetterGrade(double averageGrade)
         {
