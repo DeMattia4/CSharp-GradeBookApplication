@@ -21,7 +21,7 @@ namespace GradeBook.GradeBooks
             var threshold = (int)Math.Ceiling(Students.Count * 0.2);
 
             /* Select each student's average grade and store in descending order */
-            var grades = Students.OrderByDescending(e => e.AverageGrade).Select( e => e.AverageGrade).ToList();
+            var grades = Students.OrderByDescending(e => e.AverageGrade).Select(e => e.AverageGrade).ToList();
 
             if (grades[threshold - 1] <= averageGrade)
                 return 'A';
@@ -33,6 +33,31 @@ namespace GradeBook.GradeBooks
                 return 'D';
             else return 'F';
         }
-    }
 
+
+        public override void CalculateStatistics()
+        {
+            // Must be at least 5 Students to calculate grade
+            if (Students.Count < 5)
+            {
+                Console.WriteLine("Ranked grading requires at least 5 students with grades in order to properly calculate a student's overall grade.");
+                return;
+            }
+
+
+            base.CalculateStatistics();
+        }
+
+
+        public override void CalculateStudentStatistics(string name)
+        {
+            if (Students.Count < 5)
+            {
+                Console.WriteLine("Ranked grading requires at least 5 students with grades in order to properly calculate a student's overall grade.");
+                return;
+            }
+
+            base.CalculateStudentStatistics(name);
+        }
+    }
 }
